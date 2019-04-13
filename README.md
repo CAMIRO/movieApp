@@ -1,2 +1,3 @@
 # movieApp
-# correr index.html en cualquier servidor
+
+correr index.html en cualquier servidor
