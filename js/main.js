@@ -3,45 +3,76 @@ $(document).ready(() => {
     let searchText = $("#searchText").val();
     getMovies(searchText);
     e.preventDefault();
+
+    ///radio button check
   });
 });
+/* .val() */
+/** $filtered[0].checked */
+/* $filtered[0].id */
 
 const API_KEY = "7c4a7eaa";
 
 function getMovies(searchText) {
-  axios
-    .get(`http://www.omdbapi.com/?s=${searchText}&apikey=${API_KEY}`)
-    .then(response => {
-      console.log(response);
-      let movies = response.data.Search;
-      //console.log(movies.length);
-      let output = "";
+  let $radios = $('input[type="radio"]');
+  //console.log($radios);
+  $radios.change(function() {
+    let $filtered = $radios.filter(":checked");
 
-      output += `<h3 id="numTitle">${
-        movies.length
-      } Results for "Movie search"</h3>`;
+    // console.log($filtered[0].id);
+    axios
+      .get(`http://www.omdbapi.com/?s=${searchText}&apikey=${API_KEY}`)
+      .then(response => {
+        //console.log(response);
+        let movies = response.data.Search;
+        //console.log(movies.length);
+        let output = "";
+        //console.log(response.data.Search);
 
-      $.each(movies, (index, movie) => {
-        output += `
+        output += `<h3 id="numTitle">${
+          movies.length
+        } Results for "Movie search"</h3>`;
+
+        $.each(movies, (index, movie) => {
+          if ($filtered[0].id === "Movie" && movie.Type === "movie") {
+            output += `
            
+          
             <div class="col-md-3">
               <div class="well text-center">
                 <img onclick="seleccionador('${movie.imdbID}')" href="#" src="${
-          movie.Poster
-        }">
+              movie.Poster
+            }">
                 <h5>${movie.Title}</h5>
                 <h6>${movie.Year}</h6>
                 
               </div>
             </div>
           `;
-      });
+          } else if ($filtered[0].id === "Serie" && movie.Type === "series") {
+            output += `
+           
+          
+            <div class="col-md-3">
+              <div class="well text-center">
+                <img onclick="seleccionador('${movie.imdbID}')" href="#" src="${
+              movie.Poster
+            }">
+                <h5>${movie.Title}</h5>
+                <h6>${movie.Year}</h6>
+                
+              </div>
+            </div>
+          `;
+          }
+        });
 
-      $("#movies").html(output);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+        $("#movies").html(output);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
 }
 
 function seleccionador(id) {
