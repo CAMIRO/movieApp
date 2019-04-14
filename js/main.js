@@ -1,33 +1,26 @@
 $(document).ready(() => {
   $("#searchForm").on("submit", e => {
     let searchText = $("#searchText").val();
+    //console.log(searchText);
     getMovies(searchText);
     e.preventDefault();
-
-    ///radio button check
   });
 });
-/* .val() */
-/** $filtered[0].checked */
-/* $filtered[0].id */
 
 const API_KEY = "7c4a7eaa";
 
 function getMovies(searchText) {
   let $radios = $('input[type="radio"]');
-  //console.log($radios);
+  console.log($radios);
   $radios.change(function() {
     let $filtered = $radios.filter(":checked");
 
-    // console.log($filtered[0].id);
     axios
       .get(`http://www.omdbapi.com/?s=${searchText}&apikey=${API_KEY}`)
       .then(response => {
-        //console.log(response);
         let movies = response.data.Search;
-        //console.log(movies.length);
+
         let output = "";
-        //console.log(response.data.Search);
 
         output += `<h3 id="numTitle">${
           movies.length
